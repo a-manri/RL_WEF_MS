@@ -1,4 +1,6 @@
 #%%
+import matplotlib
+matplotlib.use('TkAgg')
 from environments.Cultivates import Cultivates
 from environments.SimuEnv import SimuEnv
 from environments.WMS_policies import RLIrrigationPolicy
