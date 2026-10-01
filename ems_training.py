@@ -12,7 +12,7 @@ from stable_baselines3.common.env_util import make_vec_env
 import matplotlib.pyplot as plt
 import time
 
-isExperimental = False
+isExperimental = True
 
 location = "experimental_logs/ems/" if isExperimental else "logs/ems/"
 
@@ -55,7 +55,7 @@ set_of_weights = np.array([[1., 4.0, 1.],
                            [1., 3.0, 1.],
                            [1., 2.0, 1.],
                            [1., 1., 1.],
-                            [1., 1., 2.],
+                           [1., 1., 2.],
                            [1., 1., 3.],
                            [1., 1., 4.], 
                            [1., 2., 2.], 
@@ -63,7 +63,7 @@ set_of_weights = np.array([[1., 4.0, 1.],
 
 weights_dict = {index: weight for index, weight in enumerate(set_of_weights)}
 
-train = False
+train = True
 if train:
     for idx, weights in enumerate(set_of_weights):
 
@@ -80,12 +80,12 @@ if train:
         ppo_env = create_wrapped_env(path + "ppo/ppo_monitor.csv", weights=weights)
 
         sac_model = SAC("MlpPolicy", sac_env, verbose=1, 
-                        train_freq=10, batch_size=512)
+                        train_freq=10, batch_size=512, device="cuda")
         td3_model = TD3("MlpPolicy", td3_env, action_noise=action_noise, 
-                        verbose=1, train_freq=10, batch_size=512, target_policy_noise=0.1)
+                        verbose=1, train_freq=10, batch_size=512, target_policy_noise=0.1, device="cuda")
         ppo_model = PPO("MlpPolicy", ppo_env, verbose=1, 
                         batch_size=episode_length*n_envs, 
-                        device="cpu", n_steps=episode_length*n_envs*2, 
+                        device="cuda", n_steps=episode_length*n_envs*2, 
                         n_epochs=12,
                         learning_rate=3e-4, ent_coef=0.1, clip_range=0.12)
 
